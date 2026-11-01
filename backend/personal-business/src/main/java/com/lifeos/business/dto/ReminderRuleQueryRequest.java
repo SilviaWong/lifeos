@@ -47,6 +47,9 @@ public class ReminderRuleQueryRequest implements Serializable {
     }
 
     public Integer getCurrent() {
+        if (current == null || current <= 0) {
+            return 1;
+        }
         return current;
     }
 
@@ -55,7 +58,10 @@ public class ReminderRuleQueryRequest implements Serializable {
     }
 
     public Integer getSize() {
-        return size;
+        if (size == null || size <= 0) {
+            return 10;
+        }
+        return Math.min(size, 100);
     }
 
     public void setSize(Integer size) {

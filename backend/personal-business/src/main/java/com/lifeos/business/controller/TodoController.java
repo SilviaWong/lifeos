@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -75,7 +76,7 @@ public class TodoController {
     }
 
     @Operation(summary = "更新待办状态（完成、取消、重新打开）")
-    @PatchMapping("/{id}/status")
+    @RequestMapping(value = "/{id}/status", method = {RequestMethod.PUT, RequestMethod.PATCH})
     public ApiResponse<TodoVO> updateTodoStatus(
             @Parameter(description = "待办 ID") @PathVariable("id") Long id,
             @Valid @RequestBody UpdateTodoStatusRequest request) {

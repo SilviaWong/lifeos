@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -81,7 +82,7 @@ public class GoalController {
     }
 
     @Operation(summary = "更新目标状态（未开始、进行中、已完成、已归档）")
-    @PatchMapping("/{id}/status")
+    @RequestMapping(value = "/{id}/status", method = {RequestMethod.PUT, RequestMethod.PATCH})
     public ApiResponse<GoalVO> updateGoalStatus(
             @Parameter(description = "目标 ID") @PathVariable("id") Long id,
             @Valid @RequestBody UpdateGoalStatusRequest request) {
@@ -125,7 +126,7 @@ public class GoalController {
     }
 
     @Operation(summary = "更新子任务状态（完成/取消完成，自动重算目标进度）")
-    @PatchMapping("/{id}/tasks/{taskId}/status")
+    @RequestMapping(value = "/{id}/tasks/{taskId}/status", method = {RequestMethod.PUT, RequestMethod.PATCH})
     public ApiResponse<GoalTaskVO> updateGoalTaskStatus(
             @Parameter(description = "目标 ID") @PathVariable("id") Long id,
             @Parameter(description = "子任务 ID") @PathVariable("taskId") Long taskId,

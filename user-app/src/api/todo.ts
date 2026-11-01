@@ -61,7 +61,7 @@ export const updateTodoApi = (id: number, data: UpdateTodoDto): Promise<ApiRespo
 export const updateTodoStatusApi = (id: number, status: string): Promise<ApiResponse<TodoItem>> => {
   return request<TodoItem>({
     url: `/todos/${id}/status`,
-    method: 'PATCH',
+    method: 'PUT',
     data: { status }
   })
 }

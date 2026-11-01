@@ -74,7 +74,7 @@ export const updateGoalApi = (id: number, data: UpdateGoalDto): Promise<ApiRespo
 export const updateGoalStatusApi = (id: number, status: string): Promise<ApiResponse<GoalItem>> => {
   return request<GoalItem>({
     url: `/goals/${id}/status`,
-    method: 'PATCH',
+    method: 'PUT',
     data: { status }
   })
 }
@@ -133,7 +133,7 @@ export const updateGoalTaskApi = (goalId: number, taskId: number, data: UpdateGo
 export const updateGoalTaskStatusApi = (goalId: number, taskId: number, status: string): Promise<ApiResponse<GoalTaskItem>> => {
   return request<GoalTaskItem>({
     url: `/goals/${goalId}/tasks/${taskId}/status`,
-    method: 'PATCH',
+    method: 'PUT',
     data: { status }
   })
 }

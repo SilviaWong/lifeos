@@ -79,6 +79,9 @@ public class FinanceRecordQueryRequest {
     }
 
     public Integer getPageNo() {
+        if (pageNo == null || pageNo <= 0) {
+            return 1;
+        }
         return pageNo;
     }
 
@@ -87,7 +90,10 @@ public class FinanceRecordQueryRequest {
     }
 
     public Integer getPageSize() {
-        return pageSize;
+        if (pageSize == null || pageSize <= 0) {
+            return 20;
+        }
+        return Math.min(pageSize, 100);
     }
 
     public void setPageSize(Integer pageSize) {
