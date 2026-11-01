@@ -177,6 +177,21 @@ CREATE TABLE IF NOT EXISTS pomodoro_record (
   KEY idx_pomodoro_todo (todo_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='番茄钟会话记录';
 
+CREATE TABLE IF NOT EXISTS pomodoro_setting (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id BIGINT UNSIGNED NOT NULL,
+  focus_duration INT UNSIGNED NOT NULL DEFAULT 25 COMMENT '专注时长(分钟)',
+  short_break_duration INT UNSIGNED NOT NULL DEFAULT 5 COMMENT '短休息时长(分钟)',
+  long_break_duration INT UNSIGNED NOT NULL DEFAULT 15 COMMENT '长休息时长(分钟)',
+  long_break_interval INT UNSIGNED NOT NULL DEFAULT 4 COMMENT '长休息间隔周期(几次专注后长休息)',
+  auto_start_breaks TINYINT NOT NULL DEFAULT 0 COMMENT '是否自动开始休息: 0-否, 1-是',
+  auto_start_pomodoros TINYINT NOT NULL DEFAULT 0 COMMENT '是否自动开始下一个番茄: 0-否, 1-是',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uk_pomodoro_setting_user (user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='番茄钟用户偏好配置';
+
 -- 05. Habits
 CREATE TABLE IF NOT EXISTS habit (
   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,

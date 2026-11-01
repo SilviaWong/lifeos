@@ -99,6 +99,10 @@
           <view class="icon-circle bg-blue">📝</view>
           <text class="shortcut-text">待办事项</text>
         </view>
+        <view class="shortcut-item" @tap="goToPomodoro">
+          <view class="icon-circle bg-red">⏱️</view>
+          <text class="shortcut-text">番茄专注</text>
+        </view>
         <view class="shortcut-item" @tap="switchTab('/pages/goals/index')">
           <view class="icon-circle bg-purple">🎯</view>
           <text class="shortcut-text">目标管理</text>
@@ -218,6 +222,10 @@ const goToLogin = () => {
 
 const goToTodos = () => {
   uni.switchTab({ url: '/pages/todos/index' })
+}
+
+const goToPomodoro = () => {
+  uni.navigateTo({ url: '/pages/pomodoro/index' })
 }
 
 const switchTab = (url: string) => {
@@ -494,6 +502,7 @@ const switchTab = (url: string) => {
   }
 
   .bg-blue { background-color: #eff6ff; }
+  .bg-red { background-color: #fff1f0; }
   .bg-purple { background-color: #f5f3ff; }
   .bg-green { background-color: #ecfdf5; }
   .bg-orange { background-color: #fff7ed; }

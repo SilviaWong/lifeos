@@ -25,6 +25,12 @@
       }
     },
     {
+      "path": "pages/pomodoro/index",
+      "style": {
+        "navigationBarTitleText": "番茄钟与专注"
+      }
+    },
+    {
       "path": "pages/my/index",
       "style": {
         "navigationBarTitleText": "个人中心"

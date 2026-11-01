@@ -1,4 +1,6 @@
 DROP TABLE IF EXISTS module_usage_log;
+DROP TABLE IF EXISTS pomodoro_setting;
+DROP TABLE IF EXISTS pomodoro_record;
 DROP TABLE IF EXISTS todo_task;
 DROP TABLE IF EXISTS goal_task;
 DROP TABLE IF EXISTS goal;
@@ -154,6 +156,42 @@ CREATE TABLE IF NOT EXISTS todo_task (
   KEY idx_todo_user_status_due (user_id, status, due_at),
   KEY idx_todo_user_start (user_id, start_at),
   KEY idx_todo_goal (goal_id)
+);
+
+CREATE TABLE IF NOT EXISTS pomodoro_record (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id BIGINT UNSIGNED NOT NULL,
+  goal_id BIGINT UNSIGNED DEFAULT NULL,
+  todo_id BIGINT UNSIGNED DEFAULT NULL,
+  session_type VARCHAR(16) NOT NULL DEFAULT 'FOCUS',
+  planned_seconds INT NOT NULL,
+  actual_seconds INT NOT NULL DEFAULT 0,
+  status VARCHAR(16) NOT NULL DEFAULT 'RUNNING',
+  started_at DATETIME NOT NULL,
+  ended_at DATETIME DEFAULT NULL,
+  end_reason VARCHAR(24) DEFAULT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_pomodoro_user_started (user_id, started_at),
+  KEY idx_pomodoro_user_status (user_id, status),
+  KEY idx_pomodoro_goal (goal_id),
+  KEY idx_pomodoro_todo (todo_id)
+);
+
+CREATE TABLE IF NOT EXISTS pomodoro_setting (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id BIGINT UNSIGNED NOT NULL,
+  focus_duration INT NOT NULL DEFAULT 25,
+  short_break_duration INT NOT NULL DEFAULT 5,
+  long_break_duration INT NOT NULL DEFAULT 15,
+  long_break_interval INT NOT NULL DEFAULT 4,
+  auto_start_breaks TINYINT NOT NULL DEFAULT 0,
+  auto_start_pomodoros TINYINT NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  CONSTRAINT uk_pomodoro_setting_user UNIQUE (user_id)
 );
 
 CREATE TABLE IF NOT EXISTS module_usage_log (
