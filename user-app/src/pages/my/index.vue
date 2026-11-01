@@ -56,6 +56,23 @@
           </view>
           <text class="item-arrow">></text>
         </view>
+
+        <view class="menu-item" @click="goToNotifications">
+          <view class="item-left">
+            <text class="menu-icon">🔔</text>
+            <text class="menu-title">消息通知</text>
+            <text v-if="unreadCount > 0" class="badge-unread">{{ unreadCount }}</text>
+          </view>
+          <text class="item-arrow">></text>
+        </view>
+
+        <view class="menu-item" @click="goToReminders">
+          <view class="item-left">
+            <text class="menu-icon">⚙️</text>
+            <text class="menu-title">提醒规则设置</text>
+          </view>
+          <text class="item-arrow">></text>
+        </view>
       </view>
     </view>
 
@@ -72,9 +89,32 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
 import { useUserStore } from '../../stores/user'
+import { getUnreadCountApi } from '../../api/reminder'
 
 const userStore = useUserStore()
+const unreadCount = ref(0)
+
+const fetchUnreadCount = async () => {
+  if (userStore.isLoggedIn) {
+    try {
+      const res = await getUnreadCountApi()
+      if (typeof res.data === 'number') {
+        unreadCount.value = res.data
+      }
+    } catch (e) {
+      // 忽略未登录或网络静默异常
+    }
+  } else {
+    unreadCount.value = 0
+  }
+}
+
+onShow(() => {
+  fetchUnreadCount()
+})
 
 const handleProfileClick = () => {
   if (!userStore.isLoggedIn) {
@@ -124,6 +164,22 @@ const goToDiaries = () => {
     return
   }
   uni.navigateTo({ url: '/pages/diaries/index' })
+}
+
+const goToNotifications = () => {
+  if (!userStore.isLoggedIn) {
+    goToLogin()
+    return
+  }
+  uni.navigateTo({ url: '/pages/notifications/index' })
+}
+
+const goToReminders = () => {
+  if (!userStore.isLoggedIn) {
+    goToLogin()
+    return
+  }
+  uni.navigateTo({ url: '/pages/reminders/index' })
 }
 
 const handleLogout = () => {
@@ -230,6 +286,16 @@ const showFeatureTip = (feature: string) => {
 .menu-title {
   font-size: 28rpx;
   color: #1f2d3d;
+}
+
+.badge-unread {
+  background-color: #ff4d4f;
+  color: #ffffff;
+  font-size: 20rpx;
+  font-weight: bold;
+  padding: 2rpx 12rpx;
+  border-radius: 20rpx;
+  margin-left: 12rpx;
 }
 
 .item-arrow {

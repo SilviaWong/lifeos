@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.net.InetAddress;
 
@@ -13,6 +14,7 @@ import java.net.InetAddress;
  * LifeOS 应用启动入口
  */
 @SpringBootApplication(scanBasePackages = "com.lifeos")
+@EnableScheduling
 @MapperScan("com.lifeos.**.mapper")
 public class LifeOsApplication {
 

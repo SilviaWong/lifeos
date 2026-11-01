@@ -1,3 +1,6 @@
+DROP TABLE IF EXISTS reminder_execution_log;
+DROP TABLE IF EXISTS reminder_message;
+DROP TABLE IF EXISTS reminder_rule;
 DROP TABLE IF EXISTS diary;
 DROP TABLE IF EXISTS memo;
 DROP TABLE IF EXISTS item_lending;
@@ -341,6 +344,58 @@ CREATE TABLE IF NOT EXISTS diary (
   deleted TINYINT NOT NULL DEFAULT 0,
   PRIMARY KEY (id),
   KEY idx_diary_user_date (user_id, diary_date)
+);
+
+CREATE TABLE IF NOT EXISTS reminder_rule (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id BIGINT UNSIGNED NOT NULL,
+  rule_name VARCHAR(100) NOT NULL,
+  trigger_type VARCHAR(24) NOT NULL,
+  business_ref_id BIGINT UNSIGNED DEFAULT NULL,
+  remind_at TIME DEFAULT NULL,
+  advance_minutes INT UNSIGNED NOT NULL DEFAULT 0,
+  repeat_rule VARCHAR(255) DEFAULT NULL,
+  start_date DATE DEFAULT NULL,
+  end_date DATE DEFAULT NULL,
+  status TINYINT NOT NULL DEFAULT 1,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  PRIMARY KEY (id),
+  KEY idx_reminder_rule_user_status (user_id, status, trigger_type)
+);
+
+CREATE TABLE IF NOT EXISTS reminder_message (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id BIGINT UNSIGNED NOT NULL,
+  rule_id BIGINT UNSIGNED DEFAULT NULL,
+  title VARCHAR(160) NOT NULL,
+  content VARCHAR(1000) DEFAULT NULL,
+  message_type VARCHAR(24) NOT NULL DEFAULT 'SYSTEM',
+  business_ref_id BIGINT UNSIGNED DEFAULT NULL,
+  scheduled_at DATETIME DEFAULT NULL,
+  sent_at DATETIME DEFAULT NULL,
+  read_at DATETIME DEFAULT NULL,
+  status VARCHAR(16) NOT NULL DEFAULT 'PENDING',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  PRIMARY KEY (id),
+  KEY idx_reminder_message_user_status_time (user_id, status, scheduled_at),
+  KEY idx_reminder_message_rule (rule_id)
+);
+
+CREATE TABLE IF NOT EXISTS reminder_execution_log (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  rule_id BIGINT UNSIGNED NOT NULL,
+  user_id BIGINT UNSIGNED NOT NULL,
+  idempotency_key VARCHAR(160) NOT NULL,
+  execute_at DATETIME NOT NULL,
+  result_status VARCHAR(16) NOT NULL DEFAULT 'SUCCESS',
+  error_message VARCHAR(500) DEFAULT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uk_reminder_idempotency (idempotency_key),
+  KEY idx_reminder_exec_user_time (user_id, execute_at)
 );
 
 
