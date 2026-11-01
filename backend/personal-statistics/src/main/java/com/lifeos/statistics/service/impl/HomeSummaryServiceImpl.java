@@ -1,9 +1,13 @@
 package com.lifeos.statistics.service.impl;
 
 import com.lifeos.business.service.GoalService;
+import com.lifeos.business.service.HabitService;
+import com.lifeos.business.service.PomodoroService;
 import com.lifeos.business.service.TodoTaskService;
 import com.lifeos.business.vo.GoalSummaryVO;
+import com.lifeos.business.vo.PomodoroSummaryVO;
 import com.lifeos.business.vo.TodoSummaryVO;
+import com.lifeos.system.security.SecurityUtil;
 import com.lifeos.statistics.service.HomeSummaryService;
 import com.lifeos.statistics.vo.HomeSummaryVO;
 import org.springframework.stereotype.Service;
@@ -20,16 +24,25 @@ public class HomeSummaryServiceImpl implements HomeSummaryService {
 
     private final TodoTaskService todoTaskService;
     private final GoalService goalService;
+    private final HabitService habitService;
+    private final PomodoroService pomodoroService;
 
-    public HomeSummaryServiceImpl(TodoTaskService todoTaskService, GoalService goalService) {
+    public HomeSummaryServiceImpl(TodoTaskService todoTaskService,
+                                  GoalService goalService,
+                                  HabitService habitService,
+                                  PomodoroService pomodoroService) {
         this.todoTaskService = todoTaskService;
         this.goalService = goalService;
+        this.habitService = habitService;
+        this.pomodoroService = pomodoroService;
     }
 
     @Override
     public HomeSummaryVO getHomeSummary() {
+        Long userId = SecurityUtil.getLoginUserId();
         TodoSummaryVO todoSummary = todoTaskService.getTodoSummary();
         GoalSummaryVO goalSummary = goalService.getGoalSummary();
+        PomodoroSummaryVO pomodoroSummary = pomodoroService.getSummary();
 
         LocalDate today = LocalDate.now();
         LocalTime now = LocalTime.now();
@@ -47,9 +60,10 @@ public class HomeSummaryServiceImpl implements HomeSummaryService {
 
         vo.setActiveGoalCount(goalSummary.getActiveCount());
 
-        // 占位字段，后续阶段持续接入真实数据
-        vo.setTodayHabitCheckinCount(0L);
-        vo.setTodayFocusMinutes(0L);
+        // 接入真实习惯与专注数据
+        long todayHabitCount = habitService.countTodayCheckins(userId);
+        vo.setTodayHabitCheckinCount(todayHabitCount);
+        vo.setTodayFocusMinutes(pomodoroSummary != null ? pomodoroSummary.getTodayFocusMinutes() : 0L);
 
         return vo;
     }

@@ -17,7 +17,7 @@
     <!-- 个人生活记录模块导航 -->
     <view class="life-card">
       <view class="menu-list">
-        <view class="menu-item" @click="showFeatureTip('习惯打卡')">
+        <view class="menu-item" @click="goToHabits">
           <view class="item-left">
             <text class="menu-icon">🌱</text>
             <text class="menu-title">习惯打卡</text>
@@ -84,6 +84,14 @@ const handleProfileClick = () => {
 
 const goToLogin = () => {
   uni.navigateTo({ url: '/pages/login/index' })
+}
+
+const goToHabits = () => {
+  if (!userStore.isLoggedIn) {
+    goToLogin()
+    return
+  }
+  uni.navigateTo({ url: '/pages/habits/index' })
 }
 
 const handleLogout = () => {

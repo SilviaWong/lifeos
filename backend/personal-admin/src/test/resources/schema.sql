@@ -194,6 +194,38 @@ CREATE TABLE IF NOT EXISTS pomodoro_setting (
   CONSTRAINT uk_pomodoro_setting_user UNIQUE (user_id)
 );
 
+CREATE TABLE IF NOT EXISTS habit (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id BIGINT UNSIGNED NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  description VARCHAR(500) DEFAULT NULL,
+  frequency VARCHAR(16) NOT NULL DEFAULT 'DAILY',
+  target_count INT UNSIGNED NOT NULL DEFAULT 1,
+  start_date DATE NOT NULL,
+  end_date DATE DEFAULT NULL,
+  status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE',
+  reminder_time TIME DEFAULT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  PRIMARY KEY (id),
+  KEY idx_habit_user_status (user_id, status)
+);
+
+CREATE TABLE IF NOT EXISTS habit_checkin (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id BIGINT UNSIGNED NOT NULL,
+  habit_id BIGINT UNSIGNED NOT NULL,
+  checkin_date DATE NOT NULL,
+  note VARCHAR(500) DEFAULT NULL,
+  is_makeup TINYINT NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  PRIMARY KEY (id),
+  CONSTRAINT uk_habit_checkin_date UNIQUE (habit_id, checkin_date),
+  KEY idx_habit_checkin_user_date (user_id, checkin_date)
+);
+
 CREATE TABLE IF NOT EXISTS module_usage_log (
   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   user_id BIGINT UNSIGNED NOT NULL,

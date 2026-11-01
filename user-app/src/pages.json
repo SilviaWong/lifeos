@@ -31,6 +31,12 @@
       }
     },
     {
+      "path": "pages/habits/index",
+      "style": {
+        "navigationBarTitleText": "习惯打卡"
+      }
+    },
+    {
       "path": "pages/my/index",
       "style": {
         "navigationBarTitleText": "个人中心"
