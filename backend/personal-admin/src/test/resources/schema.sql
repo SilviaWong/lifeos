@@ -226,6 +226,38 @@ CREATE TABLE IF NOT EXISTS habit_checkin (
   KEY idx_habit_checkin_user_date (user_id, checkin_date)
 );
 
+CREATE TABLE IF NOT EXISTS finance_category (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id BIGINT UNSIGNED DEFAULT NULL,
+  category_name VARCHAR(64) NOT NULL,
+  category_type VARCHAR(16) NOT NULL,
+  icon VARCHAR(64) DEFAULT NULL,
+  sort_no INT NOT NULL DEFAULT 0,
+  status TINYINT NOT NULL DEFAULT 1,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_finance_category_scope (user_id, category_type, status)
+);
+
+CREATE TABLE IF NOT EXISTS finance_record (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id BIGINT UNSIGNED NOT NULL,
+  category_id BIGINT UNSIGNED DEFAULT NULL,
+  record_type VARCHAR(16) NOT NULL,
+  amount DECIMAL(12,2) NOT NULL,
+  currency_code CHAR(3) NOT NULL DEFAULT 'CNY',
+  record_date DATE NOT NULL,
+  title VARCHAR(120) DEFAULT NULL,
+  remark VARCHAR(500) DEFAULT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  PRIMARY KEY (id),
+  KEY idx_finance_user_date_type (user_id, record_date, record_type),
+  KEY idx_finance_user_category_date (user_id, category_id, record_date)
+);
+
 CREATE TABLE IF NOT EXISTS module_usage_log (
   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   user_id BIGINT UNSIGNED NOT NULL,

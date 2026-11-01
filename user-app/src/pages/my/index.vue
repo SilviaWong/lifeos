@@ -25,7 +25,7 @@
           <text class="item-arrow">></text>
         </view>
 
-        <view class="menu-item" @click="showFeatureTip('收支账本')">
+        <view class="menu-item" @click="goToFinance">
           <view class="item-left">
             <text class="menu-icon">💰</text>
             <text class="menu-title">收支记账</text>
@@ -92,6 +92,14 @@ const goToHabits = () => {
     return
   }
   uni.navigateTo({ url: '/pages/habits/index' })
+}
+
+const goToFinance = () => {
+  if (!userStore.isLoggedIn) {
+    goToLogin()
+    return
+  }
+  uni.navigateTo({ url: '/pages/finance/index' })
 }
 
 const handleLogout = () => {

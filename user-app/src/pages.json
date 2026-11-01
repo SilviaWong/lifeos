@@ -37,6 +37,12 @@
       }
     },
     {
+      "path": "pages/finance/index",
+      "style": {
+        "navigationBarTitleText": "收支记账"
+      }
+    },
+    {
       "path": "pages/my/index",
       "style": {
         "navigationBarTitleText": "个人中心"
