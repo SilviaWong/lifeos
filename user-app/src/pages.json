@@ -43,6 +43,24 @@
       }
     },
     {
+      "path": "pages/items/index",
+      "style": {
+        "navigationBarTitleText": "物品与借还"
+      }
+    },
+    {
+      "path": "pages/memos/index",
+      "style": {
+        "navigationBarTitleText": "个人备忘录"
+      }
+    },
+    {
+      "path": "pages/diaries/index",
+      "style": {
+        "navigationBarTitleText": "心情日记"
+      }
+    },
+    {
       "path": "pages/my/index",
       "style": {
         "navigationBarTitleText": "个人中心"

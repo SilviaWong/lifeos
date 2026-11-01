@@ -33,7 +33,7 @@
           <text class="item-arrow">></text>
         </view>
 
-        <view class="menu-item" @click="showFeatureTip('个人物品')">
+        <view class="menu-item" @click="goToItems">
           <view class="item-left">
             <text class="menu-icon">📦</text>
             <text class="menu-title">物品与借还</text>
@@ -41,7 +41,7 @@
           <text class="item-arrow">></text>
         </view>
 
-        <view class="menu-item" @click="showFeatureTip('备忘录')">
+        <view class="menu-item" @click="goToMemos">
           <view class="item-left">
             <text class="menu-icon">📌</text>
             <text class="menu-title">备忘录</text>
@@ -49,7 +49,7 @@
           <text class="item-arrow">></text>
         </view>
 
-        <view class="menu-item" @click="showFeatureTip('个人日记')">
+        <view class="menu-item" @click="goToDiaries">
           <view class="item-left">
             <text class="menu-icon">📔</text>
             <text class="menu-title">心情日记</text>
@@ -100,6 +100,30 @@ const goToFinance = () => {
     return
   }
   uni.navigateTo({ url: '/pages/finance/index' })
+}
+
+const goToItems = () => {
+  if (!userStore.isLoggedIn) {
+    goToLogin()
+    return
+  }
+  uni.navigateTo({ url: '/pages/items/index' })
+}
+
+const goToMemos = () => {
+  if (!userStore.isLoggedIn) {
+    goToLogin()
+    return
+  }
+  uni.navigateTo({ url: '/pages/memos/index' })
+}
+
+const goToDiaries = () => {
+  if (!userStore.isLoggedIn) {
+    goToLogin()
+    return
+  }
+  uni.navigateTo({ url: '/pages/diaries/index' })
 }
 
 const handleLogout = () => {

@@ -1,3 +1,7 @@
+DROP TABLE IF EXISTS diary;
+DROP TABLE IF EXISTS memo;
+DROP TABLE IF EXISTS item_lending;
+DROP TABLE IF EXISTS personal_item;
 DROP TABLE IF EXISTS module_usage_log;
 DROP TABLE IF EXISTS pomodoro_setting;
 DROP TABLE IF EXISTS pomodoro_record;
@@ -270,6 +274,73 @@ CREATE TABLE IF NOT EXISTS module_usage_log (
   KEY idx_usage_module_time (module_code, occurred_at),
   KEY idx_usage_user_time (user_id, occurred_at),
   KEY idx_usage_action_time (action_code, occurred_at)
+);
+
+CREATE TABLE IF NOT EXISTS personal_item (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id BIGINT UNSIGNED NOT NULL,
+  item_name VARCHAR(120) NOT NULL,
+  category VARCHAR(64) DEFAULT NULL,
+  quantity DECIMAL(10,2) NOT NULL DEFAULT 1.00,
+  unit VARCHAR(24) DEFAULT '件',
+  storage_location VARCHAR(120) DEFAULT NULL,
+  purchase_date DATE DEFAULT NULL,
+  status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE',
+  remark VARCHAR(500) DEFAULT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  PRIMARY KEY (id),
+  KEY idx_item_user_status (user_id, status),
+  KEY idx_item_user_name (user_id, item_name)
+);
+
+CREATE TABLE IF NOT EXISTS item_lending (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id BIGINT UNSIGNED NOT NULL,
+  item_id BIGINT UNSIGNED NOT NULL,
+  borrower_name VARCHAR(80) NOT NULL,
+  lent_at DATETIME NOT NULL,
+  expected_return_at DATETIME DEFAULT NULL,
+  returned_at DATETIME DEFAULT NULL,
+  status VARCHAR(16) NOT NULL DEFAULT 'LENT',
+  remark VARCHAR(500) DEFAULT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_lending_user_status_due (user_id, status, expected_return_at),
+  KEY idx_lending_item (item_id)
+);
+
+CREATE TABLE IF NOT EXISTS memo (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id BIGINT UNSIGNED NOT NULL,
+  title VARCHAR(160) NOT NULL,
+  content MEDIUMTEXT DEFAULT NULL,
+  tags VARCHAR(500) DEFAULT NULL,
+  is_pinned TINYINT NOT NULL DEFAULT 0,
+  status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  PRIMARY KEY (id),
+  KEY idx_memo_user_pinned_updated (user_id, is_pinned, updated_at)
+);
+
+CREATE TABLE IF NOT EXISTS diary (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id BIGINT UNSIGNED NOT NULL,
+  diary_date DATE NOT NULL,
+  title VARCHAR(160) DEFAULT NULL,
+  content MEDIUMTEXT NOT NULL,
+  mood VARCHAR(24) DEFAULT NULL,
+  weather VARCHAR(24) DEFAULT NULL,
+  cover_url VARCHAR(500) DEFAULT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  PRIMARY KEY (id),
+  KEY idx_diary_user_date (user_id, diary_date)
 );
 
 
