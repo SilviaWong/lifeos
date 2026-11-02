@@ -110,3 +110,8 @@ export const getFinanceTrendsApi = (year?: number, months = 6): Promise<ApiRespo
   })
 }
 
+export const getFinancePageApi = (params?: any): Promise<ApiResponse<PageResult<FinanceRecordItem>>> => {
+  return getFinanceRecordsApi(params)
+}
+
+

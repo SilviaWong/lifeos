@@ -1,0 +1,46 @@
+version: '3.8'
+
+# =================================================================
+# LifeOS 本地开发环境第三方依赖编排 (Local Development Middleware)
+# 作用：仅通过 Docker 运行 MySQL 等中间件，代码直接在本地 IDE / 命令行中调试
+# =================================================================
+
+services:
+  # 1. 本地开发 MySQL 8.0 数据库
+  mysql:
+    image: mysql:8.0.36
+    container_name: lifeos-dev-mysql
+    restart: unless-stopped
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_ai_ci
+      - --default-time-zone=+08:00
+    environment:
+      MYSQL_ROOT_PASSWORD: your_local_password
+      MYSQL_DATABASE: lifeos
+      TZ: Asia/Shanghai
+    ports:
+      - "${DB_PORT:-3307}:3306"
+    volumes:
+      - mysql_dev_data:/var/lib/mysql
+      # 字符集与时区统一配置 (强制客户端与服务端均为 utf8mb4)
+      - ./docker/mysql/conf.d:/etc/mysql/conf.d:ro
+      # 首次启动自动导入项目全量表结构与基础字典，无需手动建表
+      - ./docs/lifeos_schema_mysql8.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
+      # 自动导入预置的测试账号、待办、目标、健康、打卡与记账全套初始演示数据
+      - ./docs/lifeos_seed_data.sql:/docker-entrypoint-initdb.d/02_seed.sql:ro
+
+  # 2. 可选：轻量级网页版数据库管理工具 (Adminer，免装 Navicat / DBeaver)
+  adminer:
+    image: adminer:latest
+    container_name: lifeos-dev-adminer
+    restart: unless-stopped
+    ports:
+      - "8088:8080"
+    depends_on:
+      - mysql
+
+volumes:
+  mysql_dev_data:
+    name: lifeos_mysql_dev_data
+

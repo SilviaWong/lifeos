@@ -100,3 +100,8 @@ export const getHealthStandardsApi = (): Promise<ApiResponse<HealthStandardItem[
   })
 }
 
+export const getHealthRecordPageApi = (params?: any): Promise<ApiResponse<PageResult<HealthRecordItem>>> => {
+  return getHealthRecordsApi(params)
+}
+
+

@@ -6,10 +6,16 @@
 --    in this first version to keep soft-delete and module lifecycle manageable.
 -- 3) Run on a new database. Review default admin bootstrap strategy before production.
 
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+
 CREATE DATABASE IF NOT EXISTS lifeos
   DEFAULT CHARACTER SET utf8mb4
   COLLATE utf8mb4_0900_ai_ci;
 USE lifeos;
+
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
 
 -- 01. Identity
 CREATE TABLE IF NOT EXISTS sys_user (
@@ -54,10 +60,11 @@ CREATE TABLE IF NOT EXISTS sys_user_role (
   KEY idx_user_role_role (role_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户角色关联';
 
-INSERT IGNORE INTO sys_role(role_code, role_name, description) VALUES
+INSERT INTO sys_role(role_code, role_name, description) VALUES
 ('USER', '普通用户', '个人生活管理用户'),
 ('ADMIN', '管理员', '平台运营管理员'),
-('SUPER_ADMIN', '超级管理员', '系统管理员');
+('SUPER_ADMIN', '超级管理员', '系统管理员')
+ON DUPLICATE KEY UPDATE role_name = VALUES(role_name), description = VALUES(description);
 
 -- 02. Health
 CREATE TABLE IF NOT EXISTS health_record (
@@ -341,6 +348,7 @@ CREATE TABLE IF NOT EXISTS reminder_rule (
   status TINYINT NOT NULL DEFAULT 1,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deleted TINYINT NOT NULL DEFAULT 0,
   PRIMARY KEY (id),
   KEY idx_reminder_rule_user_status (user_id, status, trigger_type)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='提醒规则';
@@ -358,6 +366,7 @@ CREATE TABLE IF NOT EXISTS reminder_message (
   read_at DATETIME DEFAULT NULL,
   status VARCHAR(16) NOT NULL DEFAULT 'PENDING' COMMENT 'PENDING/SENT/READ/FAILED',
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  deleted TINYINT NOT NULL DEFAULT 0,
   PRIMARY KEY (id),
   KEY idx_reminder_message_user_status_time (user_id, status, scheduled_at),
   KEY idx_reminder_message_rule (rule_id)

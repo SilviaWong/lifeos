@@ -89,19 +89,25 @@
       "style": {
         "navigationBarTitleText": "账号注册"
       }
+    },
+    {
+      "path": "pages/life/index",
+      "style": {
+        "navigationBarTitleText": "生活管理"
+      }
     }
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "LifeOS",
     "navigationBarBackgroundColor": "#ffffff",
-    "backgroundColor": "#f7f8fa"
+    "backgroundColor": "#F6F8FA"
   },
   "tabBar": {
-    "color": "#8c8c8c",
-    "selectedColor": "#1677ff",
+    "color": "#94A3B8",
+    "selectedColor": "#00C28A",
     "backgroundColor": "#ffffff",
-    "borderStyle": "black",
+    "borderStyle": "white",
     "list": [
       {
         "pagePath": "pages/index/index",
@@ -116,8 +122,8 @@
         "text": "目标"
       },
       {
-        "pagePath": "pages/todos/index",
-        "text": "日程"
+        "pagePath": "pages/life/index",
+        "text": "生活"
       },
       {
         "pagePath": "pages/my/index",

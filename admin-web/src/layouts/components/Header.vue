@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAppStore } from '../../stores/app'
 import { useUserStore } from '../../stores/user'
@@ -71,6 +71,12 @@ const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
 const isSuperAdmin = computed(() => userStore.roles.includes('SUPER_ADMIN'))
 const currentTitle = computed(() => (route.meta?.title as string) || '')
+
+onMounted(() => {
+  if (userStore.isLoggedIn) {
+    userStore.fetchUserInfo().catch(() => {})
+  }
+})
 
 const handleCommand = (command: string) => {
   if (command === 'logout') {

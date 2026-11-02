@@ -20,6 +20,7 @@ services:
       TZ: Asia/Shanghai
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./docker/mysql/conf.d:/etc/mysql/conf.d:ro
       - ./docs/lifeos_schema_mysql8.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
     ports:
       # 如仅容器间通信可不暴露宿主机端口，若需本地数据库管理工具访问可暴露 3306

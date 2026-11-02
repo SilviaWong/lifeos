@@ -113,6 +113,9 @@ const fetchUnreadCount = async () => {
 }
 
 onShow(() => {
+  if (userStore.isLoggedIn) {
+    userStore.fetchUserInfo().catch(() => {})
+  }
   fetchUnreadCount()
 })
 
